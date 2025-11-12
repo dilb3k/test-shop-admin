@@ -5,11 +5,5 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    proxy: {
-      "/api": {
-        target: "https://api-e-commerce.tenzorsoft.uz",
-        changeOrigin: true,
-      },
-    },
   },
 })
