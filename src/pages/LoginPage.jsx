@@ -54,8 +54,7 @@ export default function LoginPage({ onToast }) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#f5f5f5" }}>
-      <Container maxWidth="sm">
+        <Container maxWidth="sm" sx={{ mt: 12 }}>
         <Card elevation={3} sx={{ p: 4 }}>
           <Box sx={{ textAlign: "center", mb: 4 }}>
             <Box
@@ -132,6 +131,5 @@ export default function LoginPage({ onToast }) {
           </form>
         </Card>
       </Container>
-    </div>
   )
 }
