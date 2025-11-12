@@ -1,13 +1,17 @@
 import axios from "axios"
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
+const DEFAULT_LANG = "en"
 
-// Create axios instance with optimized configuration
+if (typeof window !== "undefined" && !localStorage.getItem("language")) {
+  localStorage.setItem("language", DEFAULT_LANG)
+}
+
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    "Accept-Language": typeof window !== "undefined" ? localStorage.getItem("language") || "uz" : "uz",
     "Content-Type": "application/json",
+    "Accept-Language": typeof window !== "undefined" ? localStorage.getItem("language") : DEFAULT_LANG,
   },
   timeout: 10000,
 })
@@ -18,7 +22,7 @@ axiosInstance.interceptors.request.use((config) => {
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-    config.headers["Accept-Language"] = localStorage.getItem("language") || "uz"
+    config.headers["Accept-Language"] = localStorage.getItem("language") || DEFAULT_LANG
   }
   return config
 })
@@ -37,14 +41,14 @@ axiosInstance.interceptors.response.use(
   },
 )
 
-// AUTH API
 export const authAPI = {
-  register: (username, email, password) => axiosInstance.post("/auth/register", { username, email, password }),
+  register: (username, email, password) =>
+    axiosInstance.post("/auth/register", { username, email, password }),
 
-  login: (username, password) => axiosInstance.post("/auth/login", { username, password }),
+  login: (username, password) =>
+    axiosInstance.post("/auth/login", { username, password }),
 }
 
-// PRODUCTS API
 export const productsAPI = {
   getAll: (page = 0, size = 10, sortBy = "id", sortDir = "asc") =>
     axiosInstance.get("/products", { params: { page, size, sortBy, sortDir } }),
@@ -61,7 +65,6 @@ export const productsAPI = {
   delete: (id) => axiosInstance.delete(`/products/${id}`),
 }
 
-// ORDERS API
 export const ordersAPI = {
   getAll: (page = 0, size = 10, sortBy = "orderDate", sortDir = "desc") =>
     axiosInstance.get("/orders", { params: { page, size, sortBy, sortDir } }),
@@ -76,3 +79,5 @@ export const ordersAPI = {
 
   cancel: (id) => axiosInstance.delete(`/orders/${id}`),
 }
+
+export default axiosInstance
